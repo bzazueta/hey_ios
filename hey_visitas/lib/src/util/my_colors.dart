@@ -9,5 +9,6 @@ class MyColors {
   static Color backgroundGrrenOpacity = Color(0xFFe0f2f1);
   static Color black = Color(0xFF000000);
   static Color indigo = Colors.indigo;
+  static Color verde = Colors.green.shade500;
 
 }

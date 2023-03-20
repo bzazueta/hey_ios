@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 
-class NoticesMessagesListController{
+class HomeLobbyController{
+
   ProgressDialog? _progressDialog;
   BuildContext? context;
 
@@ -20,13 +19,16 @@ class NoticesMessagesListController{
     //refresh();
   }
 
-  void finish()async{
-
-    Navigator.pop(context!);
-  }
-
-  void goToNoticesDetail(){
-    Navigator.pushNamed(context!, 'noticesdetail');
+  void goToEscaner(){
+    Navigator.pushNamed(context!, 'scanerqr');
 
   }
+
+  void goToRegistrarse(){
+    Navigator.pushNamed(context!, 'register');
+
+  }
+
+
+
 }

@@ -41,8 +41,11 @@ class LoginController {
     print('CELULAR $celular');
     print('PASSWORD $password');
     bool validado = true;
-    celular = "usuario@hey.inc";
-    password = "123456";
+     celular = "usuario@hey.inc";
+     password = "123456";
+
+    // celular = "guardia001@hey.inc";
+    // password = "123456";
 
 
     _progressDialog?.show(max: 100, msg: 'Espere un momento...');
@@ -79,7 +82,15 @@ class LoginController {
           print('respuesta ${_data}');
           VariablesGlobales.usuario = _data['user']['email'];
           VariablesGlobales.pasw = password;
-          Navigator.pushNamedAndRemoveUntil(context!, 'home', (route) => false);
+          int rol = _data['user']['rol'] ?? 0;
+          if(rol == 1)
+          {
+            Navigator.pushNamedAndRemoveUntil(context!, 'home', (route) => false);
+          }
+          if(rol == 2)
+          {
+            Navigator.pushNamedAndRemoveUntil(context!, 'homelobby', (route) => false);
+          }
 
         }
         else {

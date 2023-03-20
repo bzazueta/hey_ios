@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 
-class NoticesMessagesListController{
+class NoticesDetailController{
+
   ProgressDialog? _progressDialog;
   BuildContext? context;
+  Function? refresh;
 
   Future init(BuildContext context) async {
     this.context = context;
@@ -23,10 +24,5 @@ class NoticesMessagesListController{
   void finish()async{
 
     Navigator.pop(context!);
-  }
-
-  void goToNoticesDetail(){
-    Navigator.pushNamed(context!, 'noticesdetail');
-
   }
 }

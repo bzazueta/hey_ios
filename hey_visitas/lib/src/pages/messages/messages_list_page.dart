@@ -66,7 +66,7 @@ class _MessagesListPageState extends State<MessagesListPage> {
                 children: [
                   Expanded(
                     child: Container(
-                        margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.07),
+                        margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02),
                         //color: Colors.green,
                         child:
                         Stack(
@@ -149,9 +149,64 @@ class _MessagesListPageState extends State<MessagesListPage> {
               Expanded(
                 child: Container(
                   child: ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        _buildList(data[index]),
+                    padding: const EdgeInsets.all(10.0),
+                    itemCount: 15,//filteredUsers.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    width: double.maxFinite,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.black,
+                                          width: 2.0,
+                                          style: BorderStyle.solid
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white,
+                                    ),
+                                    child: const Center (
+                                        child: Text('Hello World')
+                                    ),
+                                  ),
+                                ),
+
+                                Container(
+                                    margin: const EdgeInsets.only(left: 5),
+                                    child: ElevatedButton(
+                                      onPressed: (){},
+                                      child: const Text('VER',
+                                      )
+                                      ,
+                                      style: ElevatedButton.styleFrom(
+                                          primary: MyColors.indigo,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(5)
+                                          ),
+                                          padding: const EdgeInsets.symmetric(vertical: 15)
+                                      ),
+                                    )
+                                ),
+
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5.0,
+                            ),
+
+
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

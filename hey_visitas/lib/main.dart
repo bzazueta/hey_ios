@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hey_visitas/src/pages/forgot_password/forgot_page.dart';
 import 'package:hey_visitas/src/pages/home/home_page.dart';
+import 'package:hey_visitas/src/pages/home_lobby/home_lobby_page.dart';
 import 'package:hey_visitas/src/pages/login/login_page.dart';
 import 'package:hey_visitas/src/pages/messages/messages_list_page.dart';
+import 'package:hey_visitas/src/pages/notices/notices_detail/notices_detail_page.dart';
 import 'package:hey_visitas/src/pages/notices/notices_list/notices_list_page.dart';
 import 'package:hey_visitas/src/pages/notices_messages/notices_message_home/notices_messages_home_page.dart';
 import 'package:hey_visitas/src/pages/provider/provider_page.dart';
+import 'package:hey_visitas/src/pages/register/register_page.dart';
+import 'package:hey_visitas/src/pages/scaner_qr/scaner_qr_page.dart';
 import 'package:hey_visitas/src/pages/visits/visits_page.dart';
 import 'package:hey_visitas/src/pages/visits_pending/visits_pending_page.dart';
 import 'package:hey_visitas/src/util/my_colors.dart';
@@ -51,10 +55,10 @@ class _MyAppState extends State<MyApp> {
         'noticeslist' : (BuildContext context) => NoticesMessagesListPage(),
         'messageslist' : (BuildContext context) => MessagesListPage(),
         'visitspending' : (BuildContext context) => VisitsPendingPage(),
-        // 'adeudos' : (BuildContext context) => AdeudosPage(),
-        // 'bitacora' : (BuildContext context) => BitacoraPage(),
-        // 'perfil' : (BuildContext context) => PerfilPage(),
-        // 'usuarios' : (BuildContext context) => UsuariosPage(),
+        'homelobby' : (BuildContext context) => HomeLobbyPage(),
+        'scanerqr' : (BuildContext context) => ScanerQrPage(),
+        'register' : (BuildContext context) => RegisterPage(),
+        'noticesdetail' : (BuildContext context) => NoticesDetailPage(),
         // 'detallepagos' : (BuildContext context) => DetallePagoPage(),
         // 'listabitacora' : (BuildContext context) => ListaBitacoraPage(),
         // 'crearusuario' : (BuildContext context) => CrearUsuarioPage(),
