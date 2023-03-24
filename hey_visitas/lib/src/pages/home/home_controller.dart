@@ -1,11 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hey_visitas/src/models/departments.dart';
+import 'package:hey_visitas/src/util/variables_globales.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
+
+import '../../providers/users_providers.dart';
+import '../../util/my_dialog.dart';
 
 class HomeController{
  ProgressDialog? _progressDialog;
  BuildContext? context;
-
-  Future init(BuildContext context) async {
+ UsersProviders usersProvider = new UsersProviders();
+ Deparments? deparments ;
+ Future init(BuildContext context) async {
     this.context = context;
     _progressDialog = ProgressDialog(context: context);
     //this.refresh = refresh;
@@ -17,6 +25,44 @@ class HomeController{
     //getCategories();
     //refresh();
   }
+
+ void validateUser() async
+ {
+
+   _progressDialog?.show(max: 100, msg: 'Validando usuario...');
+
+
+     try
+     {
+       var data = await usersProvider.validateUser(VariablesGlobales.usuario,VariablesGlobales.pasw);
+       final _data = json.decode(data.toString());
+       if (_data['message'] == 'Datos correctos.' )
+       {
+         _progressDialog?.close();
+         print('respuesta ${_data}');
+         VariablesGlobales.departamentos.clear();
+         //VariablesGlobales.departamentos.add(deparments!);
+         deparments = Deparments(id: 0, descripcion: "Selecciona una opción");
+         VariablesGlobales.departamentos.add(deparments!);
+         for (var i = 0; i < _data['Departamentos'].length; i++)
+         {
+            deparments = Deparments(id: _data['Departamentos'][0]['Id'], descripcion: _data['Departamentos'][0]['Descripcion']);
+            VariablesGlobales.departamentos.add(deparments!);
+         }
+
+         goToVisits();
+
+       }
+       else {
+         _progressDialog?.close();
+         MyDialog.showError(context!, _data['text'].toString());
+       }
+     } catch (e) {
+       _progressDialog?.close();
+       e.toString();
+     }
+
+ }
 
  void goToVisits(){
    Navigator.pushNamed(context!, 'visits');

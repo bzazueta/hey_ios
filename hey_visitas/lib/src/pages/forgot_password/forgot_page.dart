@@ -151,7 +151,7 @@ class _ForgotPageState extends State<ForgotPage> {
 
   Widget _txtUsuario() {
     return TextField(
-      //controller: _con.usuarioController,
+      controller: _con.emailController,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
           filled: true,
@@ -194,7 +194,9 @@ class _ForgotPageState extends State<ForgotPage> {
       width: double.infinity,
       margin: const EdgeInsets.only(left:20.0,right: 20.0,top: 20),
       child: ElevatedButton(
-        onPressed: (){},
+        onPressed: (){
+          _con.forgotPassw(_con.emailController.text);
+        },
         style: ElevatedButton.styleFrom(
             primary: MyColors.indigo,
             shape: RoundedRectangleBorder(

@@ -7,6 +7,7 @@ import 'package:hey_visitas/src/pages/messages/messages_list_page.dart';
 import 'package:hey_visitas/src/pages/notices/notices_detail/notices_detail_page.dart';
 import 'package:hey_visitas/src/pages/notices/notices_list/notices_list_page.dart';
 import 'package:hey_visitas/src/pages/notices_messages/notices_message_home/notices_messages_home_page.dart';
+import 'package:hey_visitas/src/pages/pick_identification/pick_identification_page.dart';
 import 'package:hey_visitas/src/pages/provider/provider_page.dart';
 import 'package:hey_visitas/src/pages/register/register_page.dart';
 import 'package:hey_visitas/src/pages/scaner_qr/scaner_qr_page.dart';
@@ -59,7 +60,7 @@ class _MyAppState extends State<MyApp> {
         'scanerqr' : (BuildContext context) => ScanerQrPage(),
         'register' : (BuildContext context) => RegisterPage(),
         'noticesdetail' : (BuildContext context) => NoticesDetailPage(),
-        // 'detallepagos' : (BuildContext context) => DetallePagoPage(),
+        'pickvisits' : (BuildContext context) => PickIdentificationPage(),
         // 'listabitacora' : (BuildContext context) => ListaBitacoraPage(),
         // 'crearusuario' : (BuildContext context) => CrearUsuarioPage(),
         // 'editarusuario' : (BuildContext context) => EditarUsuarioPage(),
@@ -90,7 +91,24 @@ class _MyAppState extends State<MyApp> {
         // 'restaurant/categories/create' : (BuildContext context) => RestaurantCategoriesCreatePage(),
         // 'restaurant/products/create' : (BuildContext context) => RestaurantProductsCreatePage(),
         // 'delivery/orders/list' : (BuildContext context) => DeliveryOrdersListPage(),
+        // # add pods for desired Firebase products
+        // # https://firebase.google.com/docs/ios/setup#available-pods
+        // #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
+        //#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
         // 'delivery/orders/map' : (BuildContext context) => DeliveryOrdersMapPage(),
+        //# Add the Firebase pod for Google Analytics
+        // pod 'FirebaseAnalytics'
+        //
+        // # For Analytics without IDFA collection capability, use this pod instead
+        // # pod ‘Firebase/AnalyticsWithoutAdIdSupport’
+        //
+        // # Add the pods for any other Firebase products you want to use in your app
+        // # For example, to use Firebase Authentication and Cloud Firestore
+        // pod 'FirebaseAuth'
+        // pod 'FirebaseFirestore'
+        // pod 'FirebaseMessaging'
+        // # add pods for desired Firebase products
+        // # https://firebase.google.com/docs/ios/setup#available-pods
       },
       theme: ThemeData(
         // fontFamily: 'NimbusSans',

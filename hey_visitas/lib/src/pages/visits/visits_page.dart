@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hey_visitas/src/models/departments.dart';
 import 'package:hey_visitas/src/pages/visits/visits_controller.dart';
+import 'package:hey_visitas/src/util/variables_globales.dart';
+import 'package:intl/intl.dart';
 
 import '../../util/my_colors.dart';
 
@@ -22,6 +25,8 @@ class _VisitsPageState extends State<VisitsPage> {
     DropdownMenuItem(child: Text("Si"),value: "Si"),
     DropdownMenuItem(child: Text("No"),value: "No"),
   ];
+  String dropdownValueDptod = '';
+  String dropdownValueDpto = '';
 
   @override
   void initState() {
@@ -29,7 +34,7 @@ class _VisitsPageState extends State<VisitsPage> {
     super.initState();
 
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      _con.init(context);
+      _con.init(context,refresh);
     });
   }
 
@@ -271,7 +276,27 @@ class _VisitsPageState extends State<VisitsPage> {
       width: 250,
       height: 40,
       child: TextField(
-        //controller: (){},
+        controller: _con.fechaController,
+        onTap: () async {
+          DateTime? pickedDate = await showDatePicker(
+              context: context, initialDate: DateTime.now(),
+              firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+              lastDate: DateTime(2101)
+          );
+
+          if(pickedDate != null ){
+            print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+            String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+            print(formattedDate); //formatted date output using intl package =>  2021-03-16
+            //you can implement different kind of Date Format here according to your requirement
+
+            setState(() {
+              _con.fechaController.text = formattedDate; //set output date to TextField value.
+            });
+          }else{
+            print("Date is not selected");
+          }
+        },
         //keyboardType: TextInputType.number,
         decoration: InputDecoration(
             filled: true,
@@ -311,41 +336,54 @@ class _VisitsPageState extends State<VisitsPage> {
 
   Widget _dropDownDepartamento()
   {
-    return  Container
+    return   Container
       (
-      margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02,left: 20,right: 20),
-      width: 250,
-      height: 55,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10)
       ),
-      // margin:  EdgeInsets.symmetric(horizontal: 50, vertical: 5),
-      // width: double.infinity,
-      // height: 58,
+      margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02,left: 20,right: 20),
+      width: 250,
+      height: 55,
       child:
       InputDecorator(
-        decoration: const InputDecoration(border: OutlineInputBorder()),
+        decoration: const InputDecoration(border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black,width: 1))),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-              value: selectedValueTitular,
-              icon: Icon(Icons.arrow_drop_down),
-              iconSize: 26,
-              elevation: 5,
-              style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.normal),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? data) {
-                setState(() {
-                  selectedValueTitular = data!;
-                  dropdownValueTitular = selectedValueTitular;
-                  print(dropdownValueTitular);
-                });
-              },
+            dropdownColor: Colors.white,
+            value:_con.idDepto,
+            icon: Icon(Icons.arrow_drop_down),
+            iconSize: 16,
+            elevation: 0,
+            style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),
+            underline: Container(
+              height: 0,
+              color: Colors.deepPurpleAccent,
+            ),
+            items: VariablesGlobales.departamentos.map<DropdownMenuItem<String>>((Deparments value) {
+              return DropdownMenuItem<String>(
+                value: value.id.toString(),
+                child: Text(value.descripcion.toString(),
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 14,
+                      fontStyle: FontStyle.italic
+                  ),),
+              );
+            }).toList(),
+            onChanged: (String? data) {
+              setState(() {
+                //var _index =_con.listaCalles.indexOf(data);
+                _con.idDepto= data!;
+                dropdownValueDptod = _con.idDepto;
+                // dropdownValueCalle =  _con.listaCalles![_index].calle.toString();
+                // _con.dropDownAsuntoController.text = dropdownValue;
+                print(dropdownValueDpto);
+              });
+            },
 
-              items: itemsTitular
+
 
           ),
         ),
@@ -374,7 +412,7 @@ class _VisitsPageState extends State<VisitsPage> {
       width: 250,
       height: 40,
       child: TextField(
-        //controller: (){},
+        controller: _con.nombreController,
         //keyboardType: TextInputType.number,
         decoration: InputDecoration(
             filled: true,
@@ -418,7 +456,7 @@ class _VisitsPageState extends State<VisitsPage> {
       width: 250,
       height: 40,
       child: TextField(
-        //controller: (){},
+        controller: _con.placasController,
         //keyboardType: TextInputType.number,
         decoration: InputDecoration(
             filled: true,
@@ -447,12 +485,16 @@ class _VisitsPageState extends State<VisitsPage> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children:  [
         Checkbox(
-        value: true,
-        onChanged: null
-         ),
-        Text('Frecuente',
+          value: frecuente,
+          onChanged: (value) {
+            setState(() {
+               frecuente = value!;
+            });
+          },
+        ),
+        const Text('Frecuente',
           style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.normal,
@@ -481,7 +523,7 @@ class _VisitsPageState extends State<VisitsPage> {
           width: MediaQuery.of(context).size.width * 0.30,
           margin: const EdgeInsets.only(left:20.0,right: 20.0,top: 20),
           child: ElevatedButton(
-            onPressed: (){},
+            onPressed: _con.goToPick,
             child: const Text('Seleccionar'),
             style: ElevatedButton.styleFrom(
                 primary: MyColors.indigo,
@@ -501,7 +543,8 @@ class _VisitsPageState extends State<VisitsPage> {
       width: MediaQuery.of(context).size.width * 0.40,
       margin: const EdgeInsets.only(left:20.0,right: 20.0,top: 20),
       child: ElevatedButton(
-        onPressed: (){},
+        onPressed:(){ _con.createVisits(VariablesGlobales.usuario,VariablesGlobales.pasw,_con.fechaController.text,
+           _con.nombreController.text,_con.placasController.text,_con.idDepto,frecuente);},
         child: const Text('CREAR VISITA'),
         style: ElevatedButton.styleFrom(
             primary: MyColors.indigo,
