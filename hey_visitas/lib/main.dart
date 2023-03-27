@@ -7,10 +7,13 @@ import 'package:hey_visitas/src/pages/messages/messages_list_page.dart';
 import 'package:hey_visitas/src/pages/notices/notices_detail/notices_detail_page.dart';
 import 'package:hey_visitas/src/pages/notices/notices_list/notices_list_page.dart';
 import 'package:hey_visitas/src/pages/notices_messages/notices_message_home/notices_messages_home_page.dart';
+import 'package:hey_visitas/src/pages/pdf_view/pdf_view_page.dart';
 import 'package:hey_visitas/src/pages/pick_identification/pick_identification_page.dart';
+import 'package:hey_visitas/src/pages/pick_identification_provider/pick_identification_provider_page.dart';
 import 'package:hey_visitas/src/pages/provider/provider_page.dart';
 import 'package:hey_visitas/src/pages/register/register_page.dart';
 import 'package:hey_visitas/src/pages/scaner_qr/scaner_qr_page.dart';
+import 'package:hey_visitas/src/pages/see_file/see_file_page.dart';
 import 'package:hey_visitas/src/pages/visits/visits_page.dart';
 import 'package:hey_visitas/src/pages/visits_pending/visits_pending_page.dart';
 import 'package:hey_visitas/src/util/my_colors.dart';
@@ -61,9 +64,9 @@ class _MyAppState extends State<MyApp> {
         'register' : (BuildContext context) => RegisterPage(),
         'noticesdetail' : (BuildContext context) => NoticesDetailPage(),
         'pickvisits' : (BuildContext context) => PickIdentificationPage(),
-        // 'listabitacora' : (BuildContext context) => ListaBitacoraPage(),
-        // 'crearusuario' : (BuildContext context) => CrearUsuarioPage(),
-        // 'editarusuario' : (BuildContext context) => EditarUsuarioPage(),
+        'pickprovider' : (BuildContext context) => PickIdentificationProviderPage(),
+        'seefile' : (BuildContext context) => SeeFilePage(),
+        'seepdf' : (BuildContext context) => PdfViewPage(),
         // 'detalleadeudos' : (BuildContext context) => DetalleAdeudosPage(),
         // 'bitacoraaccesoslist' : (BuildContext context) => BitacoraAccesosListPage(),
         // 'detallebitacoraaccesos' : (BuildContext context) => BitacoraAccesosDetallePage(),

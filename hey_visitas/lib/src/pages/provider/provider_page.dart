@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hey_visitas/src/pages/provider/provider_controller.dart';
+import 'package:intl/intl.dart';
 
+import '../../models/departments.dart';
 import '../../util/my_colors.dart';
+import '../../util/variables_globales.dart';
 
 class ProviderPage extends StatefulWidget {
   const ProviderPage({Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class ProviderPage extends StatefulWidget {
 
 class _ProviderPageState extends State<ProviderPage> {
 
+  bool frecuente = false;
   ProviderController _con = ProviderController();
   String selectedValueTitular = "Seleccione una opción";
   String dropdownValueTitular = "Seleccione una opción";
@@ -22,13 +26,16 @@ class _ProviderPageState extends State<ProviderPage> {
     DropdownMenuItem(child: Text("No"),value: "No"),
   ];
 
+  String dropdownValueDptod = '';
+  String dropdownValueDpto = '';
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      _con.init(context);
+      _con.init(context,refresh);
     });
   }
 
@@ -272,7 +279,7 @@ class _ProviderPageState extends State<ProviderPage> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          width: 150,
+          width: MediaQuery.of(context).size.width * 0.35,
           //color: Colors.grey,
           margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02,left: MediaQuery.of(context).size.width * 0.015,right: MediaQuery.of(context).size.width * 0.015),
           child: const Text('Fecha',
@@ -291,8 +298,28 @@ class _ProviderPageState extends State<ProviderPage> {
             width: 550,
             height: 35,
             child: TextField(
-              //controller: (){},
+              controller: _con.fechaController,
               //keyboardType: TextInputType.number,
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                    context: context, initialDate: DateTime.now(),
+                    firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                    lastDate: DateTime(2101)
+                );
+
+                if(pickedDate != null ){
+                  print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                  print(formattedDate); //formatted date output using intl package =>  2021-03-16
+                  //you can implement different kind of Date Format here according to your requirement
+
+                  setState(() {
+                    _con.fechaController.text = formattedDate; //set output date to TextField value.
+                  });
+                }else{
+                  print("Date is not selected");
+                }
+              },
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -322,7 +349,7 @@ class _ProviderPageState extends State<ProviderPage> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-         width: MediaQuery.of(context).size.width * 0.40,
+         width: MediaQuery.of(context).size.width * 0.35,
           //color: Colors.grey,
           margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02,left: MediaQuery.of(context).size.width * 0.015,right: MediaQuery.of(context).size.width * 0.015),
           child: const Text('Departamento',
@@ -336,47 +363,60 @@ class _ProviderPageState extends State<ProviderPage> {
 
         Expanded(
           child: Container
-            (
+         (
             margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02,left: MediaQuery.of(context).size.width * 0.020,right: MediaQuery.of(context).size.width * 0.015),
-            width: 250,
+            width: 550,
             height: 55,
             decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10)
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10)
             ),
-            // margin:  EdgeInsets.symmetric(horizontal: 50, vertical: 5),
-            // width: double.infinity,
-            // height: 58,
             child:
             InputDecorator(
-              decoration: const InputDecoration(border: OutlineInputBorder()),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                    value: selectedValueTitular,
-                    icon: Icon(Icons.arrow_drop_down),
-                    iconSize: 26,
-                    elevation: 5,
-                    style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.normal),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (String? data) {
-                      setState(() {
-                        selectedValueTitular = data!;
-                        dropdownValueTitular = selectedValueTitular;
-                        print(dropdownValueTitular);
-                      });
-                    },
+            decoration: const InputDecoration(border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black,width: 1))),
+            child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+            dropdownColor: Colors.white,
+            value:_con.idDepto,
+            icon: Icon(Icons.arrow_drop_down),
+            iconSize: 16,
+            elevation: 0,
+            style: TextStyle(color: Colors.black, fontSize: 15,fontWeight: FontWeight.bold),
+            underline: Container(
+            height: 0,
+            color: Colors.deepPurpleAccent,
+            ),
+            items: VariablesGlobales.departamentos.map<DropdownMenuItem<String>>((Deparments value) {
+            return DropdownMenuItem<String>(
+            value: value.id.toString(),
+            child: Text(value.descripcion.toString(),
+            style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.normal,
+            fontSize: 14,
+            fontStyle: FontStyle.italic
+            ),),
+            );
+            }).toList(),
+            onChanged: (String? data) {
+            setState(() {
+            //var _index =_con.listaCalles.indexOf(data);
+            _con.idDepto= data!;
+            dropdownValueDptod = _con.idDepto;
+            // dropdownValueCalle =  _con.listaCalles![_index].calle.toString();
+            // _con.dropDownAsuntoController.text = dropdownValue;
+            print(dropdownValueDpto);
+            });
+            },
 
-                    items: itemsTitular
 
-                ),
-              ),
+
+            ),
+            ),
             ),
 
 
-          )
+            ),
         )
 
 
@@ -391,10 +431,10 @@ class _ProviderPageState extends State<ProviderPage> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          width: MediaQuery.of(context).size.width * 0.40,
+          width: MediaQuery.of(context).size.width * 0.35,
           //color: Colors.grey,
           margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.01,left: MediaQuery.of(context).size.width * 0.015,right: MediaQuery.of(context).size.width * 0.015),
-          child: Text('Nombre',
+          child: const Text('Nombre',
             style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -410,7 +450,7 @@ class _ProviderPageState extends State<ProviderPage> {
             width: 550,
             height: 35,
             child: TextField(
-              //controller: (){},
+              controller: _con.nombreController,
               //keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   filled: true,
@@ -447,7 +487,7 @@ class _ProviderPageState extends State<ProviderPage> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          width: MediaQuery.of(context).size.width * 0.40,
+          width: MediaQuery.of(context).size.width * 0.35,
           //color: Colors.grey,
           margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.01,left: MediaQuery.of(context).size.width * 0.015,right: MediaQuery.of(context).size.width * 0.015),
           child: const Text('Empresa',
@@ -466,7 +506,7 @@ class _ProviderPageState extends State<ProviderPage> {
             width: 550,
             height: 35,
             child: TextField(
-              //controller: (){},
+              controller: _con.empresaController,
               //keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   filled: true,
@@ -507,7 +547,7 @@ class _ProviderPageState extends State<ProviderPage> {
           child: const Text('Identificacion',
             style: TextStyle(
                 color: Colors.black,
-                fontWeight: FontWeight.normal,
+                fontWeight: FontWeight.bold,
                 fontSize: 20,
                 fontStyle: FontStyle.italic
             ),
@@ -517,7 +557,7 @@ class _ProviderPageState extends State<ProviderPage> {
           width: MediaQuery.of(context).size.width * 0.30,
           margin: const EdgeInsets.only(left:20.0,right: 20.0,top: 20),
           child: ElevatedButton(
-            onPressed: (){},
+            onPressed: _con.goToPick,
             child: const Text('Seleccionar'),
             style: ElevatedButton.styleFrom(
                 primary: MyColors.indigo,
@@ -539,7 +579,7 @@ class _ProviderPageState extends State<ProviderPage> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          width: MediaQuery.of(context).size.width * 0.40,
+          width: MediaQuery.of(context).size.width * 0.35,
           //color: Colors.grey,
           margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.01,left: MediaQuery.of(context).size.width * 0.015,right: MediaQuery.of(context).size.width * 0.015),
           child: const Text('Placas',
@@ -558,7 +598,7 @@ class _ProviderPageState extends State<ProviderPage> {
             width: 550,
             height: 35,
             child: TextField(
-              //controller: (){},
+              controller: _con.placasController,
               //keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   filled: true,
@@ -595,7 +635,7 @@ class _ProviderPageState extends State<ProviderPage> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          width: MediaQuery.of(context).size.width * 0.40,
+          width: MediaQuery.of(context).size.width * 0.35,
           //color: Colors.grey,
           margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.01,left: MediaQuery.of(context).size.width * 0.015,right: MediaQuery.of(context).size.width * 0.015),
           child: const Text('Ticket',
@@ -614,7 +654,7 @@ class _ProviderPageState extends State<ProviderPage> {
             width: 550,
             height: 35,
             child: TextField(
-              //controller: (){},
+              controller: _con.ticketController,
               //keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   filled: true,
@@ -651,7 +691,7 @@ class _ProviderPageState extends State<ProviderPage> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          width: MediaQuery.of(context).size.width * 0.40,
+          width: MediaQuery.of(context).size.width * 0.35,
           //color: Colors.grey,
           margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.01,left: MediaQuery.of(context).size.width * 0.015,right: MediaQuery.of(context).size.width * 0.015),
           child: const Text('Tel. Contacto',
@@ -670,7 +710,7 @@ class _ProviderPageState extends State<ProviderPage> {
             width: 550,
             height: 35,
             child: TextField(
-              //controller: (){},
+              controller: _con.telContactoController,
               //keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   filled: true,
@@ -708,7 +748,7 @@ class _ProviderPageState extends State<ProviderPage> {
       children: [
         Expanded(
           child: Container(
-            width: 150,
+            width: MediaQuery.of(context).size.width * 0.35,
             margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02,left: MediaQuery.of(context).size.width * 0.015,right: MediaQuery.of(context).size.width * 0.015),
             child: const Text('Trabajo a realizar',
               style: TextStyle(
@@ -735,11 +775,11 @@ class _ProviderPageState extends State<ProviderPage> {
         Expanded(
           child: Container(
             
-            margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02,left: MediaQuery.of(context).size.width * 0.020,right: MediaQuery.of(context).size.width * 0.015),
+            margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02,left: MediaQuery.of(context).size.width * 0.040,right: MediaQuery.of(context).size.width * 0.040),
             width: 550,
             height: 60,
             child: TextField(
-              //controller: (){},
+              controller: _con.trabajoContactoController,
               //keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   filled: true,
@@ -774,7 +814,7 @@ class _ProviderPageState extends State<ProviderPage> {
       width: MediaQuery.of(context).size.width * 0.40,
       margin: const EdgeInsets.only(left:20.0,right: 20.0,top: 20),
       child: ElevatedButton(
-        onPressed: (){},
+        onPressed: (){_con.createProvider(VariablesGlobales.usuario, VariablesGlobales.pasw, _con.idDepto, _con.fechaController.text, _con.nombreController.text, _con.empresaController.text, VariablesGlobales.image, _con.ticketController.text, _con.telContactoController.text, frecuente, _con.trabajoContactoController.text, _con.placasController.text);},
         child: const Text('CREAR PROVEEDOR'),
         style: ElevatedButton.styleFrom(
             primary: MyColors.indigo,

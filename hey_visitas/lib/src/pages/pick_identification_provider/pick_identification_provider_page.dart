@@ -1,33 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hey_visitas/src/util/variables_globales.dart';
+import 'package:hey_visitas/src/pages/pick_identification_provider/pick_identification_provider_controller.dart';
 
-import '../../../models/notices.dart';
-import '../../../util/menu.dart';
-import '../../../util/my_colors.dart';
-import 'notices_list_contoller.dart';
+import '../../util/my_colors.dart';
 
-class NoticesMessagesListPage extends StatefulWidget {
-  const NoticesMessagesListPage({Key? key}) : super(key: key);
+class PickIdentificationProviderPage extends StatefulWidget {
+  const PickIdentificationProviderPage({Key? key}) : super(key: key);
 
   @override
-  State<NoticesMessagesListPage> createState() => _NoticesMessagesListPageState();
+  State<PickIdentificationProviderPage> createState() => _PickIdentificationProviderPageState();
 }
 
-class _NoticesMessagesListPageState extends State<NoticesMessagesListPage> {
-  late List list_product ;
-  String image = "";
-  List<Menu> data = [];
-  NoticesMessagesListController _con = NoticesMessagesListController();
-  List<Notices> filteredUsers = [];
+class _PickIdentificationProviderPageState extends State<PickIdentificationProviderPage> {
+
+  PickIndentificationProviderController _con = PickIndentificationProviderController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    dataList.forEach((element) {
-      data.add(Menu.fromJson(element));
-    });
 
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _con.init(context,refresh);
@@ -42,10 +33,10 @@ class _NoticesMessagesListPageState extends State<NoticesMessagesListPage> {
       //   // the App.build method, and use it to set our appbar title.
       //   title: Text(widget.title),
       // ),
-        body: Container
-          (
+      body: Container(
           width: double.maxFinite,
           height: double.maxFinite,
+
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -54,6 +45,10 @@ class _NoticesMessagesListPageState extends State<NoticesMessagesListPage> {
                 Colors.indigo.shade400,
                 Colors.indigo.shade200,
                 Colors.indigo.shade50,
+                //Colors.blue.shade600,
+                //Colors.blue.shade400,
+                // Colors.lightBlue.shade100,
+
               ],
             ),
           ),
@@ -86,7 +81,7 @@ class _NoticesMessagesListPageState extends State<NoticesMessagesListPage> {
                                 width: MediaQuery.of(context).size.height * 0.3,
                                 child:  ElevatedButton(
                                   onPressed:
-                                  (){}
+                                      (){}
                                   ,
                                   style: ElevatedButton.styleFrom(
                                     side:  BorderSide(width:1, color:Colors.black),
@@ -150,73 +145,33 @@ class _NoticesMessagesListPageState extends State<NoticesMessagesListPage> {
                   ),
                 ],
               ),
-              Expanded(
-                child: Container(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(10.0),
-                    itemCount: filteredUsers.length,//filteredUsers.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    width: double.maxFinite,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.black,
-                                          width: 2.0,
-                                          style: BorderStyle.solid
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
-                                    ),
-                                    child: Center (
-                                        child: Text('${filteredUsers[index].titulo} ${index.toString()}')
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 5),
-                                  child: ElevatedButton(
-                                    onPressed:(){ VariablesGlobales.idNotice = filteredUsers[index].id.toString();
-                                      _con.goToNoticesDetail(filteredUsers[index].id.toString(),filteredUsers[index].titulo.toString(),filteredUsers[index].cuerpo.toString());},
-                                    style: ElevatedButton.styleFrom(
-                                        primary: MyColors.indigo,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(5)
-                                        ),
-                                        padding: const EdgeInsets.symmetric(vertical: 15)
-                                    ),
-                                    child: const Text('VER',
-                                          )
-                                    ,
-                                  )
-                                ),
+              Row(
+                //crossAxisAlignment: CrossAxisAlignment.stretch,
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: _identificacion(),
 
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5.0,
-                            ),
-
-
-                          ],
-                        ),
-                      );
-                    },
                   ),
-                ),
+
+                ],
               ),
+              Container(
+                  margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02),
+                  width: MediaQuery.of(context).size.width * 0.80,
+                  height: MediaQuery.of(context).size.height * 0.26,
+                  //color: Colors.black,
+                  child: _cardImagen()),
+              Container(
+                  margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height * 0.02,left: 20,right: 20),
+                  width: 250,
+                  child:_buttonListo()
+              ),
+
             ],
-          ),
-        )
+          )
+      ),
     );
   }
 
@@ -266,51 +221,88 @@ class _NoticesMessagesListPageState extends State<NoticesMessagesListPage> {
     );
   }
 
-  Widget _buildList(Menu list) {
-    if (list.subMenu.isEmpty)
-      return Builder(
-          builder: (context) {
-            return ListTile(
-                onTap:() {Navigator.pushNamed(context!, 'visits');},
-                leading: SizedBox(),
-                title: Text(list.name.toString())
-            );
-          }
+  Widget _identificacion() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children:  [
+
+        Container(
+          width: MediaQuery.of(context).size.width * 0.30,
+          margin: const EdgeInsets.only(left:20.0,right: 20.0,top: 20),
+          child: ElevatedButton(
+            onPressed: _con.showAlertGalery,
+            child: const Text('GALERIA'),
+            style: ElevatedButton.styleFrom(
+                primary: MyColors.indigo,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 15)
+            ),
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.30,
+          margin: const EdgeInsets.only(left:20.0,right: 20.0,top: 20),
+          child: ElevatedButton(
+            onPressed: _con.showAlertTakePhoto,
+            child: const Text('TOMAR FOTO'),
+            style: ElevatedButton.styleFrom(
+                primary: MyColors.indigo,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 15)
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _cardImagen(){
+    return
+      FadeInImage(
+        image: _con.imageFile != null
+            ? FileImage(_con.imageFile!)
+            : AssetImage('assets/img/no-image.png') as ImageProvider,
+        fit: BoxFit.contain,
+        fadeInDuration: Duration(milliseconds: 50),
+        placeholder: AssetImage('assets/img/no-image.png'),
       );
-    return ExpansionTile(
-      leading: Icon(list.icon),
-      title: Text(
-        list.name.toString(),
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+
+
+
+
+
+  }
+
+  Widget _buttonListo() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(left:20.0,right: 20.0,top: 20),
+      child: ElevatedButton(
+        onPressed: (){
+          _con.finish();
+        },
+        style: ElevatedButton.styleFrom(
+            primary: MyColors.indigo,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5)
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 15)
+        ),//_con.login,
+        child: const Text('LISTO',
+          style: TextStyle(
+              fontSize: 12
+          ),),
       ),
-      children: list.subMenu.map(_buildList).toList(),
     );
   }
 
   void refresh() {
-    setState(() {
-      filteredUsers = _con.noticiesList.isEmpty ? [] : _con.noticiesList;
-    }); // CTRL + S
+    setState(() {}); // CTRL + S
   }
-  OutlineInputBorder myinputborder(){ //return type is OutlineInputBorder
-    return const OutlineInputBorder( //Outline border type for TextFeild
-        borderRadius: BorderRadius.all(Radius.circular(0)),
-        borderSide: BorderSide(
-          color:Colors.black,
-          width: 1,
-        )
-    );
-  }
-
-  OutlineInputBorder myfocusborder(){
-    return const OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-        borderSide: BorderSide(
-          color:Colors.white,
-          width: 1,
-        )
-    );
-  }
-
 
 }

@@ -246,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                                     height: MediaQuery.of(context).size.height * 0.07,
                                     width: MediaQuery.of(context).size.height * 0.3,
                                     child:  ElevatedButton(
-                                      onPressed: _con.goToProvider,
+                                      onPressed: _con.validateProvider,
                                       style: ElevatedButton.styleFrom(
                                         side:  BorderSide(width:1, color:Colors.black),
                                         primary: Colors.grey.shade700,

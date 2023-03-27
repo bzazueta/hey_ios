@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hey_visitas/src/pages/see_file/see_file_controller.dart';
 import 'package:hey_visitas/src/util/variables_globales.dart';
 
-import '../../../util/my_colors.dart';
-import 'notices_detail_controller.dart';
+import '../../util/my_colors.dart';
 
-class NoticesDetailPage extends StatefulWidget {
-  const NoticesDetailPage({Key? key}) : super(key: key);
+
+class SeeFilePage extends StatefulWidget {
+  const SeeFilePage({Key? key}) : super(key: key);
 
   @override
-  State<NoticesDetailPage> createState() => _NoticesDetailPageState();
+  State<SeeFilePage> createState() => _SeeFilePageState();
 }
 
-class _NoticesDetailPageState extends State<NoticesDetailPage> {
-  String? idNotice = "";
-  String? titulo = "";
-  String? cuerpo = "";
-  NoticesDetailController _con = NoticesDetailController();
+class _SeeFilePageState extends State<SeeFilePage> {
+
+  SeeFileController _con = SeeFileController();
 
   @override
   void initState() {
@@ -30,12 +29,6 @@ class _NoticesDetailPageState extends State<NoticesDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    final arg = ModalRoute.of(context)!.settings.arguments as Map;
-    idNotice = arg['idNotice'].toString();
-    titulo = arg['titulo'].toString();
-    cuerpo = arg['cuerpo'].toString();
-
     return Scaffold(
       // appBar: AppBar(
       //    // leading: Icon(Icons.account_circle_rounded),
@@ -81,9 +74,13 @@ class _NoticesDetailPageState extends State<NoticesDetailPage> {
                     // width: double.maxFinite,
                     child: _titulo()
                 ),
-                _tituloNoticia(),
-                _btnAVerArchivo(),
-                _cuerpo(),
+                Container(
+                  //color: Colors.red,
+                    margin: EdgeInsets.only( top:  MediaQuery.of(context).size.height * 0.04,left : MediaQuery.of(context).size.height * 0.02,right :MediaQuery.of(context).size.height * 0.02),
+                    // width: double.maxFinite,
+                    child: _cardImagen(),
+                ),
+
 
               ],
             ),
@@ -138,70 +135,21 @@ class _NoticesDetailPageState extends State<NoticesDetailPage> {
     );
   }
 
-  Widget _tituloNoticia() {
-    return Container(
-      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1 ,top:  MediaQuery.of(context).size.height * 0.05, right :MediaQuery.of(context).size.width * 0.1),
-      width: double.maxFinite,
-      //height: 50,
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: Colors.black,
-            width: 2.0,
-            style: BorderStyle.solid
-        ),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-          child: Text('${titulo}')),
+  Widget _cardImagen(){
+    return
+      FadeInImage(
+        image: VariablesGlobales.nombreImagen != ""
+            ? NetworkImage(VariablesGlobales.url_image + VariablesGlobales.nombreImagen)
+            : AssetImage('assets/img/no-image.png') as ImageProvider,
+        fit: BoxFit.contain,
+        fadeInDuration: Duration(milliseconds: 50),
+        placeholder: AssetImage('assets/img/no-image.png'),
+      );
 
-    );
-  }
 
-  Widget _btnAVerArchivo() {
-    return Container(
-      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1 ,top:  MediaQuery.of(context).size.height * 0.03, right :MediaQuery.of(context).size.width * 0.1),
-      child: ElevatedButton(
-        onPressed:(){_con.goToSeeFile(VariablesGlobales.nombreImagen);},
-        style: ElevatedButton.styleFrom(
-            primary: MyColors.indigo,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5)
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 15)
-        ),
-        child:Container(
-          margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.03 ,top:  MediaQuery.of(context).size.height * 0.00, right :MediaQuery.of(context).size.width * 0.03),
-          child: Text('VER ARCHIVO',
-            style: TextStyle(
-              fontSize: 14
-            ),
-          ),
-        )
-        ,
-      ),
-    );
-  }
 
-  Widget _cuerpo() {
-    return Container(
-      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1 ,top:  MediaQuery.of(context).size.height * 0.05, right :MediaQuery.of(context).size.width * 0.1),
-      width: double.maxFinite,
-      //height: 200,
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: Colors.black,
-            width: 2.0,
-            style: BorderStyle.solid
-        ),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-          child: Text('${cuerpo}')),
-    );
+
+
   }
 
   void refresh() {

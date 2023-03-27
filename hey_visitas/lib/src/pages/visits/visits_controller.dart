@@ -19,17 +19,12 @@ class VisitsController{
   VisitsProvider visitsProvider = VisitsProvider();
 
   Future init(BuildContext context,Function refresh) async {
-    this.context = context;
+    VariablesGlobales.image = null;
+     this.context = context;
     _progressDialog = ProgressDialog(context: context);
      idDepto = VariablesGlobales.departamentos[0].id.toString();
      this.refresh = refresh;
-    // user = User.fromJson(await _sharedPref.read('user'));
-    // _categoriesProvider.init(context, user);
-    // _productsProvider.init(context, user);
-
-
-    //getCategories();
-    refresh();
+     refresh();
   }
 
   void createVisits(String email,String pass,String fecha,
